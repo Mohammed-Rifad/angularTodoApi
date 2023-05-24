@@ -58,3 +58,15 @@ def user_auth(request):
     except Exception as e:
         
         return JsonResponse({'statusCode':500,'message':'Something Went Wrong...'})
+
+
+def check_email(request):
+    email = request.GET['email']
+
+    email_exist = User.objects.filter(email = email).exists()
+
+    print(email_exist)
+    if email_exist:
+        return JsonResponse({'statusCode':202,})
+
+    return JsonResponse({'statusCode':200,})

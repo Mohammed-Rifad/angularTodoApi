@@ -48,13 +48,16 @@ def add_task(request):
 def task_list(request,status):
 
     user = request.GET['user']
-
+    print(user, status)
     records = Task.objects.filter(user = user, status = status)
     if records:
         serialized_records = TaskSerializer(records,many = True)
         return JsonResponse({'statusCode':200,'tasks': serialized_records.data,'msg': 'Data Fetched'})
     return JsonResponse({'statusCode':404, 'tasks':[],'msg': 'No Records Found'})
-    
+
+
+ 
+
 
 @api_view(['GET'])
 def filter_task(request):
@@ -71,12 +74,13 @@ def filter_task(request):
 @api_view(['GET'])
 def search_task(request):
     user = request.GET['user']
-    searchText = request.GET['user']
-    records = Task.objects.filter(task__contains = searchText, user = user)
+    searchText = request.GET['query']
+    print(user,searchText)
+    records = Task.objects.filter(task__contains = searchText, user = user, status = 'completed')
     if records:
         serialized_records = TaskSerializer(records,many = True)
-        return JsonResponse({'statusCode':200,'sellers':serialized_records.data,'msg': 'Data Fetched'})
-    return JsonResponse({'statusCode':404,'sellers':[],'msg' : 'No Records Found'})
+        return JsonResponse({'statusCode':200,'searchResult':serialized_records.data,'msg': 'Data Fetched'})
+    return JsonResponse({'statusCode':404,'searchResult':[],'msg' : 'No Records Found'})
     
 
 @api_view(['DELETE'])
@@ -103,7 +107,7 @@ def update_task(request,id):
         serialized_record = TaskSerializer(record, data = params)
         if serialized_record.is_valid():
             serialized_record.save()
-            return JsonResponse({'statusCode':202,'msg':'Task Upated',})
+            return JsonResponse({'statusCode':202,'msg':'Task Updated',})
 
         else:
             print(serialized_record.errors)
