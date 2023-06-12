@@ -15,33 +15,24 @@ def user_signup(request):
             serialized_set = UserSerializer(data = params)
             if serialized_set.is_valid():
                 serialized_set.save()
-                return JsonResponse({'statusCode': 201, 'message':'Signup Succesful'})
-            
+                return JsonResponse({'statusCode': 201, 'message':'Signup Succesful'})            
             else:
                 print(serialized_set.errors)
                 return JsonResponse({'statusCode': 402,'message':'form error'})
-
         else:
-            return JsonResponse({'statusCode':403,'message':'Email Already Exists'})
-    
+            return JsonResponse({'statusCode':403,'message':'Email Already Exists'})    
     except:
             return JsonResponse({'statusCode': 500,'message': 'something went wrong'})
 
 
 @api_view(['POST'])
-def user_auth(request):
-
-    
-    try:
-       
-        params = request.data
- 
-
-         
-        try:
-             
-            auth = User.objects.get(email = params['email'], password = params['password'])
-           
+def user_auth(request):  
+    print("bxhjgcszdgvjhdfg")  
+    try:       
+        params = request.data 
+        print(params)        
+        try:             
+            auth = User.objects.get(email = params['email'], password = params['password'])           
             token = 'user'+ str(randint(11111,99999))
             context = {
                 'statusCode':200,
@@ -51,20 +42,15 @@ def user_auth(request):
                 'userName':auth.name,
                 }
             return JsonResponse(context)
-
-        except Exception as e:
-             
+        except Exception as e:             
             return JsonResponse({'statusCode':401,'message':'Invalid UserName or Password'})
-    except Exception as e:
-        
+    except Exception as e:        
         return JsonResponse({'statusCode':500,'message':'Something Went Wrong...'})
 
 
 def check_email(request):
     email = request.GET['email']
-
     email_exist = User.objects.filter(email = email).exists()
-
     print(email_exist)
     if email_exist:
         return JsonResponse({'statusCode':202,})

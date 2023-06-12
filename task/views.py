@@ -9,36 +9,21 @@ from .serializers import *
 # Create your views here.
 
 @api_view(['POST'])
-def add_task(request):
-     
+def add_task(request):     
     try:
-        params = request.data
-
-         
-        
-     
-        
+        params = request.data     
         task = params['task']
         description = params['description']
-        
-
         description = request.POST['description']
         priority = request.POST['priority']
-
         today = date.today()
-        
-        
-       
-        user = Task(task=task, priority = priority, user_id = params['user'], description=description, date=today)        
-        user.save()
-       
+        user = Task(task=task,
+                    priority = priority,
+                    user_id = params['user'],
+                    description=description,
+                    date=today)        
+        user.save()       
         return JsonResponse({'statusCode': 201,'msg':'Task Added'})
-
-        
-       
-
-        
-
     except Exception as e:
         print(e)
         return JsonResponse({'statusCode': 500,'msg':'Something went wrong'})
